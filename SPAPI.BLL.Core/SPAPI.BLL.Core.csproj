@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{77E580E5-DBE4-4271-9DF8-454916A4E23F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SPAPI.BLL.Core</RootNamespace>
+    <AssemblyName>SPAPI.BLL.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\ThirdPartyDLLs\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\ThirdPartyDLLs\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyDLLs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyDLLs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.11.7.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyDLLs\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CryptoUtility.cs" />
+    <Compile Include="DefaultCacheProvider.cs" />
+    <Compile Include="Feeds\CreateFeed.cs" />
+    <Compile Include="Feeds\CreateFeedDocument.cs" />
+    <Compile Include="Feeds\GetFeed.cs" />
+    <Compile Include="Feeds\GetFeedDocumentResult.cs" />
+    <Compile Include="Feeds\UploadFeed.cs" />
+    <Compile Include="Interfaces\IPriceRepricer.cs" />
+    <Compile Include="Model\CreateFeedDocumentResponse.cs" />
+    <Compile Include="Model\CreateFeedRequest.cs" />
+    <Compile Include="Model\CreateFeedDocumentRequest.cs" />
+    <Compile Include="Model\CreateFeedResponse.cs" />
+    <Compile Include="Model\CreateReportRequest.cs" />
+    <Compile Include="Model\CreateReportResponse.cs" />
+    <Compile Include="Model\DownloadFeedResultRequest.cs" />
+    <Compile Include="Model\DownloadFeedResultResponse.cs" />
+    <Compile Include="Model\FeedStatusResponse.cs" />
+    <Compile Include="Model\GetFeedRequest.cs" />
+    <Compile Include="Model\GetFeedResponse.cs" />
+    <Compile Include="Model\GetReportDocumentResponse.cs" />
+    <Compile Include="Model\GetReportResponse.cs" />
+    <Compile Include="Model\GetReportsRequest.cs" />
+    <Compile Include="Model\GetReportsResponse.cs" />
+    <Compile Include="Model\UploadFeedRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RefreshToken.cs" />
+    <Compile Include="Reports\Reports.cs" />
+    <Compile Include="Signers\AWS4SignerBase.cs" />
+    <Compile Include="Signers\AWS4SignerForAuthorizationHeader.cs" />
+    <Compile Include="Signers\HttpHelpers.cs" />
+    <Compile Include="SPAPIUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SPAPI.DAL.Core\SPAPI.DAL.Core.csproj">
+      <Project>{15e37c70-a591-4f97-b50d-da194baaf2fb}</Project>
+      <Name>SPAPI.DAL.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

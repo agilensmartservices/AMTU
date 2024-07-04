@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/AmazonSPAPI.Scheduler/bin
+/AmazonSPAPI.Scheduler/obj
+/AmazonSPAPI.Scheduler/publish
+/AmazonSPAPI.Test/bin/Debug
+/AmazonSPAPI.Test/obj
+/SPAPI.BLL.Core/bin
+/SPAPI.BLL.Core/obj
+/SPAPI.DAL.Core/bin
+/SPAPI.DAL.Core/obj
+/.vs/AmazonSPAPI.Scheduler/FileContentIndex/1ee94f29-171c-411d-87a9-b2f71e60df88.vsidx
+/.vs/AmazonSPAPI.Scheduler/FileContentIndex/b906f405-72dc-48d7-8e76-c5629fecf4ef.vsidx
+/.vs/AmazonSPAPI.Scheduler/FileContentIndex/b25030f9-6704-442d-834c-699f03c4de91.vsidx
+/.vs/AmazonSPAPI.Scheduler/FileContentIndex/97d8588e-5ba6-45b3-a855-0625ca9a1289.vsidx
+/.vs/AmazonSPAPI.Scheduler/FileContentIndex/4377b483-ea33-4746-a0d5-0d22075cca67.vsidx
+/.vs/AmazonSPAPI.Scheduler/v17/.suo
