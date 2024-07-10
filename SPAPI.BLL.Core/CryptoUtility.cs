@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Security.Cryptography;
 
 namespace SPAPI.BLL.Core
@@ -88,6 +88,35 @@ namespace SPAPI.BLL.Core
             }
 
             return plaintext;
+        }
+
+        public static byte[] Decompress(byte[] gzip)
+        {
+            using (var inputStream = new MemoryStream(gzip))
+            using (var gzipStream = new GZipStream(inputStream, CompressionMode.Decompress))
+            using (var outputStream = new MemoryStream())
+            {
+                gzipStream.CopyTo(outputStream);
+                return outputStream.ToArray();
+            }
+        }
+
+        public static bool IsGzipCompressed(byte[] gzip)
+        {
+            try
+            {
+                using (var inputStream = new MemoryStream(gzip))
+                using (var gzipStream = new GZipStream(inputStream, CompressionMode.Decompress))
+                using (var outputStream = new MemoryStream())
+                {
+                    gzipStream.CopyTo(outputStream);
+                    return outputStream.ToArray().Length > 0;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

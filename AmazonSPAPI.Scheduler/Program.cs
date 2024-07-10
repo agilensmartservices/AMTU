@@ -1,22 +1,23 @@
-﻿using SPAPI.BLL.Core.Feeds;
-using SPAPI.BLL.Core.Model;
-using System.Collections.Generic;
-using System;
-using log4net;
-using System.IO;
+﻿using log4net;
 using Newtonsoft.Json;
-using System.Configuration;
 using SPAPI.BLL.Core;
+using SPAPI.BLL.Core.Feeds;
+using SPAPI.BLL.Core.Model;
 using SPAPI.BLL.Core.Reports;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Text;
 
 namespace AmazonSPAPI.Scheduler
 {
     public class Program
-    {   
+    {
         static void Main(string[] args)
         {
             ProcessFeed();
-            
+
             ProcessFeedResult();           
 
             ProcessReports();
@@ -45,7 +46,7 @@ namespace AmazonSPAPI.Scheduler
                 }
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.Error(ex);
                 return false;
@@ -105,7 +106,7 @@ namespace AmazonSPAPI.Scheduler
                         Worker(marketplace, "us-east-1", "POST_FLAT_FILE_FULFILLMENT_DATA", countryCode);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(ex);
                     continue;
@@ -137,7 +138,7 @@ namespace AmazonSPAPI.Scheduler
                 catch (Exception ex)
                 {
                     log.Error(ex);
-                    
+
                     continue;
                 }
             }
@@ -257,7 +258,7 @@ namespace AmazonSPAPI.Scheduler
                     ReportWorker(marketplace, "us-east-1", "GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL", countryCode);
                     log.InfoFormat("Download Orders Report for {0} Completed", countryCode);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(ex);
                     continue;
@@ -343,7 +344,7 @@ namespace AmazonSPAPI.Scheduler
                         var feedDocumentId = response.feedDocumentId;
 
                         //2. Encrypt and Upload the feed Document                      
-                        
+
                         var uploaded = new UploadFeed().UploadObject(new CreateFeedDocumentResponse()
                         {
                             url = response.url,
@@ -378,7 +379,7 @@ namespace AmazonSPAPI.Scheduler
                             return;
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         log.InfoFormat("Feed file {1} not uploaded for {0}!", countryCode, feedname);
                         continue;
@@ -393,7 +394,7 @@ namespace AmazonSPAPI.Scheduler
             log.InfoFormat("***********Feed Process Completed for {0}***********************", marketplaceId);
         }
 
-        public static void ResultWorker(string marketplaceId,  string region, string feedtype, string countryCode)
+        public static void ResultWorker(string marketplaceId, string region, string feedtype, string countryCode)
         {
             ILog log = LogManager.GetLogger("AMTU_Scheduler_FeedResult");
             log4net.Config.XmlConfigurator.Configure(
@@ -413,11 +414,12 @@ namespace AmazonSPAPI.Scheduler
 
                 var documentId = filename.Replace(".txt", "");
 
-                var resultDcoumentId = new GetFeed(region).Get(new DownloadFeedResultRequest() { 
-                     ResultFeedDocumentId = documentId
+                var resultDcoumentId = new GetFeed(region).Get(new DownloadFeedResultRequest()
+                {
+                    ResultFeedDocumentId = documentId
                 });
-                
-                if(String.IsNullOrEmpty(resultDcoumentId))
+
+                if (String.IsNullOrEmpty(resultDcoumentId))
                 {
                     log.InfoFormat("Feed {0} is in progress", documentId);
                     return;
@@ -426,8 +428,9 @@ namespace AmazonSPAPI.Scheduler
                 SPAPIUtility.RenameFile(Path.Combine(fullPath, filename), path, countryCode);
 
                 //1. Create Feed Document by Content type whcih we are going to upload
-                var response = new GetFeedDocumentResult(region).GetFile(new DownloadFeedResultRequest() { 
-                     ResultFeedDocumentId = resultDcoumentId
+                var response = new GetFeedDocumentResult(region).GetFile(new DownloadFeedResultRequest()
+                {
+                    ResultFeedDocumentId = resultDcoumentId
                 });
 
                 if (response == null)
@@ -439,9 +442,9 @@ namespace AmazonSPAPI.Scheduler
                 SPAPIUtility.CopyStream(response,
                     Path.Combine(
                         ConfigurationManager.AppSettings["FeedResultFilePath"].ToString(),
-                        path, 
+                        path,
                         countryCode,
-                        documentId+".txt"));
+                        documentId + ".txt"));
 
 
 
@@ -465,7 +468,7 @@ namespace AmazonSPAPI.Scheduler
             //************************ Create Reports Starts ***********************************
             TimeZoneInfo pacificZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
-            int LastXHours =int.Parse(ConfigurationManager.AppSettings["OrdersCreatedInLastXHours"]);
+            int LastXHours = int.Parse(ConfigurationManager.AppSettings["OrdersCreatedInLastXHours"]);
 
             var requestDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddHours(-LastXHours), pacificZone);
 
@@ -483,53 +486,61 @@ namespace AmazonSPAPI.Scheduler
                 marketplaceIds = new List<string>() { marketplaceId }
             });
 
-            if (reports != null && !string.IsNullOrEmpty(reports.message))
+            if (reports is null || string.IsNullOrEmpty(reports.reportId))
             {
-                log.InfoFormat("Error occured while create Report:{0}", reports.message);
+                log.InfoFormat("Error occured while create Report.");
+                return;
             }
-            
-            if (reports == null || reports.payload == null || String.IsNullOrEmpty(reports.payload.reportId))
-              return;
-                     
 
-            var reportId = reports.payload.reportId;
+            var reportId = reports.reportId;
+
             log.InfoFormat("ReportId:{0}", reportId);
-            //************************ Create Reports Ends ***********************************
-            tryAgain:
+        //************************ Create Reports Ends ***********************************
+        tryAgain:
             var report = new Reports(region).getReport(reportId);
 
             //Check peroidically the status till move to DONE, to get reportDocumentId
-            if (report.payload.processingStatus == ProcessingStatuses.IN_QUEUE.ToString() ||
-                report.payload.processingStatus == ProcessingStatuses.IN_PROGRESS.ToString())
+            if (report.processingStatus == ProcessingStatuses.IN_QUEUE.ToString() ||
+                report.processingStatus == ProcessingStatuses.IN_PROGRESS.ToString())
             {
                 //TODO: Max wait time for report should be defined
                 System.Threading.Thread.Sleep(1000 * 60 * 1); // 1 min wait time
                 goto tryAgain;
             }
-            else if (report.payload.processingStatus == ProcessingStatuses.DONE.ToString())
+            else if (report.processingStatus == ProcessingStatuses.DONE.ToString())
             {
                 //Download Report Document
-                var reportDocument = new Reports(region).getReportDocument(report.payload.reportDocumentId);
+                var reportDocument = new Reports(region).getReportDocument(report.reportDocumentId);
 
-                if (!String.IsNullOrEmpty(reportDocument.message))
+                if (reportDocument is null || string.IsNullOrEmpty(reportDocument.url) || string.IsNullOrEmpty(reportDocument.reportDocumentId))
                 {
-                    log.ErrorFormat("Error occured while download report:{0}", reportDocument.message);
+                    log.ErrorFormat("Error occurred while download report.");
+                    return;
                 }
 
-                var downloadURL = reportDocument.payload.url;
+                var downloadURL = reportDocument.url;
 
                 var encryptedReportContent = new Reports(region).downloadReportByte(downloadURL);
+                string plainReportContent = Encoding.UTF8.GetString(encryptedReportContent);
 
-                //Decrypt the report content
-                var plainReportContent = CryptoUtility.Decrypt
-                        (encryptedReportContent,
-                        Convert.FromBase64String(reportDocument.payload.encryptionDetails.key),
-                        Convert.FromBase64String(reportDocument.payload.encryptionDetails.initializationVector)
-                        );
+                ////Decrypt the report content
+                //var plainReportContent = CryptoUtility.Decrypt
+                //        (encryptedReportContent,
+                //        Convert.FromBase64String(reportDocument.payload.encryptionDetails.key),
+                //        Convert.FromBase64String(reportDocument.payload.encryptionDetails.initializationVector)
+                //        );
+
+                bool isCompressed = CryptoUtility.IsGzipCompressed(encryptedReportContent);
+
+                if (reportDocument.compressionAlgorithm.ToString().ToLower().Equals("gzip") && isCompressed)
+                {
+                    var reportBytes = CryptoUtility.Decompress(encryptedReportContent);
+                    plainReportContent = Encoding.UTF8.GetString(reportBytes);
+                }
 
                 SPAPIUtility.CreateFile(reportId, plainReportContent, "PendingOrders", countryCode);
-            }            
-               
             }
+
         }
+    }
 }

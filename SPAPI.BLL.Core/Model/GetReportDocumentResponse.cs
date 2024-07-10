@@ -1,20 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SPAPI.BLL.Core.Model
+﻿namespace SPAPI.BLL.Core.Model
 {
     public class GetReportDocumentResponse
-    {
-        public ReportDocument payload { get; set; }
-        public string message { get; set; }
-
-        public GetReportDocumentResponse() { }
-    }
-
-    public class ReportDocument
     {
         //required - The identifier for the report document. This identifier is unique only in combination with a seller ID.
         public string reportDocumentId { get; set; }
@@ -22,13 +8,8 @@ namespace SPAPI.BLL.Core.Model
         //required - A presigned URL for the report document. This URL expires after 5 minutes.
         public string url { get; set; }
 
-        //required - Encryption details required for decryption of a report document's contents.
-        public ReportDocumentEncryptionDetails encryptionDetails { get; set; }
-
         //If present, the report document contents have been compressed with the provided algorithm
         public CompressionAlgorithm compressionAlgorithm { get; set; }
-
-        public ReportDocument() { }
     }
 
     public class ReportDocumentEncryptionDetails

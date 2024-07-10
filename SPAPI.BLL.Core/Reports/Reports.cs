@@ -8,10 +8,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SPAPI.BLL.Core.Reports
 {
@@ -19,10 +17,10 @@ namespace SPAPI.BLL.Core.Reports
     {
         ILog log = LogManager.GetLogger("Reports");
 
-        private readonly string CreateReportResource = "reports/2020-09-04/reports";
-        private readonly string ReportsResource = "reports/2020-09-04/reports?reportTypes={0}";
-        private readonly string ReportResource = "reports/2020-09-04/reports/{reportId}";
-        private readonly string ReportDocumentResource = "reports/2020-09-04/documents/{reportDocumentId}";
+        private readonly string CreateReportResource = "reports/2021-06-30/reports";
+        private readonly string ReportsResource = "reports/2021-06-30/reports?reportTypes={0}";
+        private readonly string ReportResource = "reports/2021-06-30/reports/{reportId}";
+        private readonly string ReportDocumentResource = "reports/2021-06-30/documents/{reportDocumentId}";
         public const string ISO8601BasicFormat = "yyyyMMddTHHmmssZ";
         private readonly string JsonMediaType = "application/json; charset=utf-8";
         private readonly string region;
@@ -109,10 +107,7 @@ namespace SPAPI.BLL.Core.Reports
             else
             {
                 log.Error(response.Content);
-                return new CreateReportResponse()
-                {
-                    message = response.Content
-                };
+                return null;
             }
         }
 
@@ -166,10 +161,7 @@ namespace SPAPI.BLL.Core.Reports
             {
                 log.Error(response.Content);
 
-                return new GetReportsResponse()
-                {
-                    message = response.Content
-                };
+                return null;
             }
         }
 
@@ -223,16 +215,13 @@ namespace SPAPI.BLL.Core.Reports
             else
             {
                 log.Error(response.Content);
-                return new GetReportResponse()
-                {
-                    message = response.Content
-                };
+                return null;
             }
         }
 
         public GetReportDocumentResponse getReportDocument(string reportDocumentId)
         {
-           
+
             if (String.IsNullOrEmpty(host))
                 return null;
 
@@ -280,10 +269,7 @@ namespace SPAPI.BLL.Core.Reports
             else
             {
                 log.Error(response.Content);
-                return new GetReportDocumentResponse()
-                {
-                    message = response.Content
-                };
+                return null;
             }
         }
 

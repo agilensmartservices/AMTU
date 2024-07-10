@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SPAPI.BLL.Core.Model
 {
@@ -7,17 +6,11 @@ namespace SPAPI.BLL.Core.Model
     public class GetReportsResponse
     {
         //The payload for the getReports operation.
-        public List<Report> payload { get; set; }
+        public List<Report> reports { get; set; }
 
         /*Returned when the number of results exceeds pageSize. 
         To get the next page of results, call getReports with this token as the only parameter. */
         public string nextToken { get; set; }
-
-        //A list of error responses returned when a request is unsuccessful.
-        public List<Error> errors { get; set; }
-
-        public string message { get; set; }
-
     }
 
     public class Report
