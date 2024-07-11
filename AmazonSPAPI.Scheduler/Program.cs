@@ -18,7 +18,7 @@ namespace AmazonSPAPI.Scheduler
         {
             ProcessFeed();
 
-            ProcessFeedResult();           
+            ProcessFeedResult();
 
             ProcessReports();
 
@@ -95,7 +95,7 @@ namespace AmazonSPAPI.Scheduler
 
                     if (IsFeedExistToProcess("ListingLoader", countryCode))
                     {
-                        Worker(marketplace, "us-east-1", "POST_FLAT_FILE_LISTINGS_DATA", countryCode);
+                        Worker(marketplace, "us-east-1", "POST_FLAT_FILE_INVLOADER_DATA", countryCode);
                     }
                     if (IsFeedExistToProcess("PriceandStock", countryCode))
                     {
@@ -124,7 +124,7 @@ namespace AmazonSPAPI.Scheduler
 
                     if (IsFeedExistToProcess("ListingLoader", countryCode))
                     {
-                        Worker(marketplace, "eu-west-1", "POST_FLAT_FILE_LISTINGS_DATA", countryCode);
+                        Worker(marketplace, "eu-west-1", "POST_FLAT_FILE_INVLOADER_DATA", countryCode);
                     }
                     if (IsFeedExistToProcess("PriceandStock", countryCode))
                     {
@@ -188,7 +188,7 @@ namespace AmazonSPAPI.Scheduler
 
                 if (IsFeedExistToDownloadResult("ListingLoader", countryCode))
                 {
-                    ResultWorker(marketplace, "us-east-1", "POST_FLAT_FILE_LISTINGS_DATA", countryCode);
+                    ResultWorker(marketplace, "us-east-1", "POST_FLAT_FILE_INVLOADER_DATA", countryCode);
                 }
                 if (IsFeedExistToDownloadResult("PriceandStock", countryCode))
                 {
@@ -207,7 +207,7 @@ namespace AmazonSPAPI.Scheduler
 
                 if (IsFeedExistToDownloadResult("ListingLoader", countryCode))
                 {
-                    ResultWorker(marketplace, "eu-west-1", "POST_FLAT_FILE_LISTINGS_DATA", countryCode);
+                    ResultWorker(marketplace, "eu-west-1", "POST_FLAT_FILE_INVLOADER_DATA", countryCode);
                 }
                 if (IsFeedExistToDownloadResult("PriceandStock", countryCode))
                 {

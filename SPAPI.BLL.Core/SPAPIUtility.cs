@@ -1,14 +1,8 @@
-﻿using log4net;
-using RestSharp;
-using SPAPI.BLL.Core.Model;
-using System;
+﻿using RestSharp;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SPAPI.BLL.Core
 {
@@ -38,7 +32,7 @@ namespace SPAPI.BLL.Core
         {
             var fullPath = Path.Combine(ConfigurationManager.AppSettings["FeedFilePathToProcess"].ToString(), feedtype, countryCode);
 
-            var files = Directory.GetFiles(fullPath).Where(x=> !x.Contains("_processed")).ToList();
+            var files = Directory.GetFiles(fullPath).Where(x => !x.Contains("_processed")).ToList();
 
             if (files != null && files.Count > 0)
             {
@@ -56,10 +50,10 @@ namespace SPAPI.BLL.Core
             var pendingFiles = new List<string>();
 
             if (files != null && files.Count > 0)
-            {              
+            {
                 foreach (var file in files)
                 {
-                    if(!file.ToLower().Contains("_processed") && !file.ToLower().Contains("_processing"))
+                    if (!file.ToLower().Contains("_processed") && !file.ToLower().Contains("_processing"))
                         pendingFiles.Add(Path.Combine(fullPath, file));
                 }
             }
@@ -74,13 +68,13 @@ namespace SPAPI.BLL.Core
 
             if (files != null && files.Count > 0)
             {
-                return Path.GetFileName(files[0]);               
+                return Path.GetFileName(files[0]);
             }
             return "";
-        }       
+        }
 
         public static bool CreateFile(string feedId, string feedtype, string countryCode)
-        {  
+        {
             var fullPath = Path.Combine(ConfigurationManager.AppSettings["FeedFilePathProcessed"].ToString(), feedtype, countryCode);
 
             var filePath = Path.Combine(fullPath, feedId + ".txt");
@@ -95,13 +89,13 @@ namespace SPAPI.BLL.Core
             var fullPath = Path.Combine(ConfigurationManager.AppSettings["ReportsFilePath"].ToString(), reporttype, countryCode);
 
             var filePath = Path.Combine(fullPath, reportId + ".txt");
-            
+
             File.WriteAllText(filePath, fileContent);
 
             return true;
         }
 
-        public static string RenameFile(string filename, string feedtype, string countryCode, string text= "_processed.txt")
+        public static string RenameFile(string filename, string feedtype, string countryCode, string text = "_processed.txt")
         {
             if (filename.Contains("_processing"))
             {
@@ -125,7 +119,7 @@ namespace SPAPI.BLL.Core
         }
         public static string GetDirectoryByFeedType(string feedType)
         {
-            if(feedType.ToUpper().Equals("POST_FLAT_FILE_LISTINGS_DATA"))
+            if (feedType.ToUpper().Equals("POST_FLAT_FILE_INVLOADER_DATA"))
             {
                 return "ListingLoader";
             }
